@@ -63,7 +63,7 @@ def init_db():
     );
     """)
 
-    # 4. Processed 18Birdies rounds (Tracks every round to avoid duplicate roasts)
+    # 4. Processed 18Birdies rounds (Tracks every round to avoid duplicate roasts per player)
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS processed_rounds (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -72,10 +72,11 @@ def init_db():
         course_name TEXT NOT NULL,
         total_score INTEGER,
         score_to_par INTEGER,
-        external_round_id TEXT UNIQUE,
+        external_round_id TEXT NOT NULL,
         raw_stats_json TEXT,
         summary_posted INTEGER DEFAULT 0,
-        posted_at TIMESTAMP
+        posted_at TIMESTAMP,
+        UNIQUE(player_name, external_round_id)
     );
     """)
 
@@ -280,10 +281,13 @@ def get_player_sync_status(player_name: str) -> Optional[Dict[str, Any]]:
 
 # ----------------- 18Birdies Round Tracking -----------------
 
-def is_round_processed(external_round_id: str) -> bool:
+def is_round_processed(external_round_id: str, player_name: Optional[str] = None) -> bool:
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute("SELECT 1 FROM processed_rounds WHERE external_round_id = ?", (external_round_id,))
+    if player_name:
+        cursor.execute("SELECT 1 FROM processed_rounds WHERE external_round_id = ? AND player_name = ?", (external_round_id, player_name))
+    else:
+        cursor.execute("SELECT 1 FROM processed_rounds WHERE external_round_id = ?", (external_round_id,))
     res = cursor.fetchone()
     conn.close()
     return res is not None

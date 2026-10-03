@@ -413,7 +413,7 @@ class BirdiesSyncService:
                         default_player=detected_player_name,
                         club_map=club_map
                     )
-                    if parsed and not is_round_processed(parsed["round_id"]):
+                    if parsed and not is_round_processed(parsed["round_id"], player_name=parsed["player_name"]):
                         unprocessed_rounds.append(parsed)
 
                 if not unprocessed_rounds:

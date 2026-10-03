@@ -11,6 +11,9 @@ from src.db import (
 )
 
 class WeatherService:
+    # Open-Meteo supports up to 16 forecast days (default is only 7)
+    FORECAST_DAYS = 16
+
     def __init__(self):
         self.rain_threshold = Config.WEATHER_RAIN_THRESHOLD_PERCENT
         self.default_lat = Config.DEFAULT_COURSE_LAT
@@ -26,7 +29,8 @@ class WeatherService:
             "longitude": lon,
             "hourly": "temperature_2m,precipitation_probability,precipitation,weather_code,wind_speed_10m",
             "past_days": past_days,
-            "timezone": "auto"
+            "forecast_days": self.FORECAST_DAYS,
+            "timezone": Config.TIMEZONE
         }
         try:
             with httpx.Client(timeout=10.0) as client:

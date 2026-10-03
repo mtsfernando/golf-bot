@@ -434,6 +434,46 @@ class GolfWhatsAppBot:
             f"💬 `{t}` + anything → just chat"
         )
 
+    def _reply_weather(self, client: Optional[NewClient], chat_jid: JID):
+        """Forecast for the next booked round, or today's course forecast if nothing is booked."""
+        tz = ZoneInfo(Config.TIMEZONE)
+        now = datetime.now(tz)
+        next_tt = get_next_tee_time()
+
+        if next_tt:
+            report = self.weather.check_tee_time_weather(next_tt)
+            if report:
+                self.send_text(client, chat_jid, self.weather.format_caddy_weather_report(report, "Next round"))
+                return
+            # No forecast data for that day - most likely too far out
+            try:
+                days_out = (datetime.strptime(next_tt["date_str"], "%Y-%m-%d").date() - now.date()).days
+            except Exception:
+                days_out = None
+            if days_out is not None and days_out > WeatherService.FORECAST_DAYS - 1:
+                self.send_text(
+                    client, chat_jid,
+                    f"Next round is {next_tt['date_str']} — {days_out} days out, too far for a reliable forecast machan. "
+                    f"I'll post one automatically the day before ⛳"
+                )
+            else:
+                self.send_text(client, chat_jid, "Couldn't pull the forecast right now, machan. Try again in a bit.")
+            return
+
+        # Nothing booked: today's forecast at the home course from the current hour
+        report = self.weather.check_tee_time_weather({
+            "id": 0,
+            "course_name": Config.DEFAULT_COURSE_NAME,
+            "date_str": now.strftime("%Y-%m-%d"),
+            "start_time": now.strftime("%H:%M"),
+            "latitude": Config.DEFAULT_COURSE_LAT,
+            "longitude": Config.DEFAULT_COURSE_LON
+        })
+        if report:
+            self.send_text(client, chat_jid, self.weather.format_caddy_weather_report(report, "Today, no round booked"))
+        else:
+            self.send_text(client, chat_jid, "Couldn't pull the forecast right now, machan. Try again in a bit.")
+
     def _process_text_command(self, client: NewClient, chat_jid: JID, text: str, sender_name: str, sender_phone: str = ""):
         cleaned = text.lower()
         trigger = Config.BOT_TRIGGER_KEYWORD.lower()
@@ -521,6 +561,12 @@ class GolfWhatsAppBot:
             self.send_text(client, chat_jid, recap_msg)
             return
 
+        # Command: Weather Check - must run BEFORE "next tee time", since questions like
+        # "is it going to rain for my next tee time?" contain both sets of keywords
+        if re.search(r"\b(weather|rain|raining|rainy|forecast|wind|windy|wet|storm|sunny|temperature|cold|hot)\b", query):
+            self._reply_weather(client, chat_jid)
+            return
+
         # Command: Next Tee Time
         if any(k in query for k in ["next", "tee time", "when do we play", "game", "schedule"]):
             next_tt = get_next_tee_time()
@@ -534,30 +580,6 @@ class GolfWhatsAppBot:
                     f"👥 {next_tt['players'] or 'The boys'}"
                 )
             self.send_text(client, chat_jid, msg)
-            return
-
-        # Command: Weather Check
-        if "weather" in query or "rain" in query:
-            next_tt = get_next_tee_time()
-            if next_tt:
-                report = self.weather.check_tee_time_weather(next_tt)
-                if report:
-                    warning = self.weather.format_caddy_weather_report(report, "On-Demand Check")
-                    self.send_text(client, chat_jid, warning)
-                    return
-            # General fallback weather
-            report = self.weather.check_tee_time_weather({
-                "id": 0,
-                "course_name": Config.DEFAULT_COURSE_NAME,
-                "date_str": datetime.now().strftime("%Y-%m-%d"),
-                "start_time": datetime.now().strftime("%H:%M"),
-                "latitude": Config.DEFAULT_COURSE_LAT,
-                "longitude": Config.DEFAULT_COURSE_LON
-            })
-            if report:
-                self.send_text(client, chat_jid, self.weather.format_caddy_weather_report(report, "Today's Course Forecast"))
-            else:
-                self.send_text(client, chat_jid, "Sky looks clear enough machan, but it's Melbourne — keep a jacket in the car just in case! ☀️")
             return
 
         # Command: Sync 18Birdies rounds & check status

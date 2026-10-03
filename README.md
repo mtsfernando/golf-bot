@@ -18,8 +18,8 @@ A containerized Python-centric WhatsApp bot designed for golf groups to automate
 
 3. **🇱🇰 Anura Kumara Caddy Persona & Banter Chatbot**:
    - Responds to `@caddy`, `!caddy`, or direct questions.
-   - Speaks authentic Sri Lankan English (Singlish): *"Aiyo machan"*, *"Ane sir"*, *"Ball jungle giya"*, *"Short game total chater!"*.
-   - Answers questions like *"When is our next tee time?"*, roasts players, and gives advice.
+   - Employs iconic AKD political rally rhetoric: *"Sahodaraya"*, *"Dan balanna sahodaraya..."*, *"Meka thama thathwe!"*, *"Mage laga files thiyanawa!"*, and the Compass (*Malimawa* 🧭).
+   - Audits scorecards, catches 3-putts like corruption, demands System Change on slices, and gives fiery caddy advice.
 
 4. **🌧️ Automated Rain & Weather Alerts**:
    - Automatically tracks your upcoming tee time and queries hourly precipitation from Open-Meteo.

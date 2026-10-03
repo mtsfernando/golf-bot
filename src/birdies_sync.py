@@ -380,5 +380,5 @@ class BirdiesSyncService:
                 f"   • Latest Round: {latest_date}\n"
                 f"   • Status: {s['status']}\n\n"
             )
-        msg += "Anura Kumara says: If your round is missing, make sure you finished scorecard on 18Birdies!"
+        msg += "Anura Kumara says: Comrades, if your scorecard is missing from the registry, submit your declaration on 18Birdies immediately! Transparency is non-negotiable! 🧭"
         return msg

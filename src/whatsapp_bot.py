@@ -170,17 +170,17 @@ class GolfWhatsAppBot:
             logger.warning(f"Could not send native eventMessage (falling back to card): {ev_err}")
             log_activity("EVENT_CREATED", "WARNING", f"Fallback to card: {ev_err}")
 
-        # 2. Send Anura Kumara's Confirmation and Banter Card
+        # 2. Send Anura Kumara's Confirmation and Directive Card
         confirmation_msg = (
-            f"⛳ *NEW TEE TIME BOOKED!* ⛳\n\n"
-            f"Ado machan! {sender_name} just locked in the tee time! WhatsApp event is created:\n\n"
+            f"⛳ *NEW TEE TIME REGISTERED!* ⛳\n\n"
+            f"Sahodarawaru! {sender_name} has officially scheduled our next collective gathering!\n\n"
             f"📍 *Course:* {course}\n"
             f"📅 *Date:* {date_str} ({start_dt.strftime('%A')})\n"
             f"⏰ *Tee Off:* {start_time}\n"
-            f"👥 *Players:* {players_str}\n"
-            f"🔖 *Booking Ref:* {booking_ref}\n\n"
-            f"Anura Kumara's advice: Don't arrive at the 1st tee with a 2-hour hangover men! "
-            f"Hit 10 practice putts and bring 6 balls because that water on hole 3 is hungry! 🏌️‍♂️🌴"
+            f"👥 *Comrades:* {players_str}\n"
+            f"🔖 *Registry Ref:* {booking_ref}\n\n"
+            f"Anura Kumara's directive: Do not arrive late with bourgeois excuses or hangovers! "
+            f"Check the Compass (Malimawa 🧭), warm up on the practice green, and bring 6 balls because that water hazard respects no one! ⚖️🏌️‍♂️"
         )
         self.send_text(client, chat_jid, confirmation_msg)
 
@@ -194,8 +194,8 @@ class GolfWhatsAppBot:
             next_tt = get_next_tee_time()
             if not next_tt:
                 msg = (
-                    "Aiyo machan, no upcoming tee times found in my book! "
-                    "Upload a booking screenshot or use your golf club app to book, and I will set the event!"
+                    "Aiyo sahodaraya, no scheduled sessions found in the party registry! "
+                    "Upload a booking screenshot from your club app, and we will establish the event immediately! 🧭"
                 )
             else:
                 msg = (
@@ -203,8 +203,8 @@ class GolfWhatsAppBot:
                     f"📍 *Course:* {next_tt['course_name']}\n"
                     f"📅 *Date:* {next_tt['date_str']}\n"
                     f"⏰ *Time:* {next_tt['start_time']}\n"
-                    f"👥 *Players:* {next_tt['players'] or 'The Boys'}\n\n"
-                    f"Anura Kumara says: Practice your chip shots no! Last time short game was pure disaster!"
+                    f"👥 *Comrades:* {next_tt['players'] or 'The Comrades'}\n\n"
+                    f"Anura Kumara says: Comrades, look at the files! We need an urgent system change in your short game before Saturday! 📄🧭"
                 )
             self.send_text(client, chat_jid, msg)
             return

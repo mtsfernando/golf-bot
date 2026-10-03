@@ -1,0 +1,23 @@
+[
+  {
+    "name": "Thilina",
+    "whatsapp_phone": "+61400000001",
+    "birdies_email": "user1@example.com",
+    "birdies_password": "",
+    "handicap": 18.0
+  },
+  {
+    "name": "Kasun",
+    "whatsapp_phone": "+61400000002",
+    "birdies_email": "user2@example.com",
+    "birdies_password": "",
+    "handicap": 24.5
+  },
+  {
+    "name": "Roshan",
+    "whatsapp_phone": "+61400000003",
+    "birdies_email": "user3@example.com",
+    "birdies_password": "",
+    "handicap": 12.1
+  }
+]

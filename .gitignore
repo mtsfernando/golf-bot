@@ -1,0 +1,30 @@
+# Environment & Secrets
+.env
+config/players.json
+!config/players.example.json
+
+# WhatsApp Sessions & State
+data/
+session.db*
+*.session
+*.db
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/
+.pytest_cache/
+
+# Playwright / Browser Cache
+.playwright/
+downloads/
+
+# Logs
+*.log
+logs/
+
+# Docker
+.docker/

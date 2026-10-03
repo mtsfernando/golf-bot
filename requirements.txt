@@ -1,0 +1,22 @@
+# WhatsApp Integration (Whatsmeow Python wrapper)
+neonize>=0.3.0
+qrcode[pil]>=7.4.2
+
+# Google Gemini AI SDK
+google-genai>=0.1.1
+google-generativeai>=0.8.0
+
+# 18Birdies Web Automation & HTTP
+playwright>=1.49.0
+requests>=2.32.0
+httpx>=0.28.0
+beautifulsoup4>=4.12.0
+
+# Scheduling & Utilities
+apscheduler>=3.10.4
+python-dotenv>=1.0.1
+pydantic>=2.10.0
+pydantic-settings>=2.7.0
+pillow>=11.0.0
+python-dateutil>=2.9.0
+tabulate>=0.9.0

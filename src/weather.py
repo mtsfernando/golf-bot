@@ -140,7 +140,7 @@ class WeatherService:
         # Case 1: Under 1mm -> Weather is Good
         if category == "CLEAR":
             return (
-                f"☀️ *Uncle Sunil's Weather Brief ({window_label})*\n\n"
+                f"☀️ *Anura Kumara's Weather Brief ({window_label})*\n\n"
                 f"Good news machan! Weather at *{course}* ({date} at {time}) is looking sweet!\n"
                 f"🌡️ {temp}°C | 💧 {precip}mm rain (Clear skies)\n"
                 f"Conditions are top-notch — so no blaming the wind for your slice men! ⛳{prior_context}"
@@ -149,7 +149,7 @@ class WeatherService:
         # Case 2: 1-2mm -> Light Drizzle
         elif category == "DRIZZLE":
             return (
-                f"🌦️ *Uncle Sunil's Weather Brief ({window_label})*\n\n"
+                f"🌦️ *Anura Kumara's Weather Brief ({window_label})*\n\n"
                 f"Expect a light drizzle for *{course}* on {date} at {time}.\n"
                 f"🌡️ {temp}°C | 💧 ~{precip}mm drizzle ({report['max_rain_prob']}% chance)\n"
                 f"Pack a towel and dry your grips, but definitely game on! Hit 'em straight! 🏌️‍♂️{prior_context}"
@@ -158,7 +158,7 @@ class WeatherService:
         # Case 3: Over 2mm -> Rain Warning
         else:
             return (
-                f"🌧️ *Uncle Sunil's Weather WARNING! ({window_label})*\n\n"
+                f"🌧️ *Anura Kumara's Weather WARNING! ({window_label})*\n\n"
                 f"Ado machan! Wet weather alert for *{course}* on {date} at {time}!\n"
                 f"🌧️ {precip}mm rain forecasted ({report['max_rain_prob']}% chance) | 💨 {report['max_wind_kmh']} km/h\n"
                 f"Bring big umbrella and waterproof spikes, or cancel and head straight to 19th hole for beers! 🍺{prior_context}"

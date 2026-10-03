@@ -16,7 +16,7 @@ class Config:
 
     # WhatsApp
     BOT_TRIGGER_KEYWORD: str = os.getenv("BOT_TRIGGER_KEYWORD", "@caddy").strip()
-    BOT_NAME: str = os.getenv("BOT_NAME", "Uncle Sunil")
+    BOT_NAME: str = os.getenv("BOT_NAME", "Anura Kumara")
     WHATSAPP_TARGET_GROUP: str = os.getenv("WHATSAPP_TARGET_GROUP", "").strip()
 
     # 18Birdies

@@ -87,7 +87,7 @@ class GeminiService:
 
     def chat_as_caddy(self, user_message: str, context: Optional[str] = None) -> str:
         """
-        Responds to chat queries as Uncle Sunil, the Sri Lankan golf caddy.
+        Responds to chat queries as Anura Kumara, the Sri Lankan golf caddy.
         """
         if not self.client:
             return "Aiyo machan! My brain (GEMINI_API_KEY) is not connected yet! Please put the key in .env file, then I can talk properly!"
@@ -152,4 +152,4 @@ class GeminiService:
                 return response.text.strip()
         except Exception as e:
             print(f"[Gemini] Error generating round summary: {e}")
-            return f"⛳ *Uncle Sunil's Scorecard Update* ⛳\n\n{round_stats.get('player_name')} posted {round_stats.get('total_score')} at {round_stats.get('course_name')}. Aiyo, what a day on the links!"
+            return f"⛳ *Anura Kumara's Scorecard Update* ⛳\n\n{round_stats.get('player_name')} posted {round_stats.get('total_score')} at {round_stats.get('course_name')}. Aiyo, what a day on the links!"

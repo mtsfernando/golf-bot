@@ -35,7 +35,7 @@ DASHBOARD_HTML = """<!DOCTYPE html>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Golf-Bot Monitor | Uncle Sunil Console</title>
+  <title>Golf-Bot Monitor | Anura Kumara Console</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
@@ -83,7 +83,7 @@ DASHBOARD_HTML = """<!DOCTYPE html>
 <body>
   <div class="container">
     <header>
-      <h1>🏌️‍♂️ Golf-Bot Monitor <span style="font-size: 13px; color: var(--text-muted); font-weight: normal;">(Uncle Sunil Console)</span></h1>
+      <h1>🏌️‍♂️ Golf-Bot Monitor <span style="font-size: 13px; color: var(--text-muted); font-weight: normal;">(Anura Kumara Console)</span></h1>
       <div style="display: flex; align-items: center; gap: 12px;">
         <span id="conn-badge" class="status-pill status-offline">● WhatsApp Connecting...</span>
         <button class="btn" onclick="fetchData()">🔄 Refresh</button>
@@ -179,7 +179,7 @@ DASHBOARD_HTML = """<!DOCTYPE html>
     </table>
 
     <div class="footer">
-      Uncle Sunil Bot Console • Auto-refreshing every 10s • Beaconhills Golf Club
+      Anura Kumara Bot Console • Auto-refreshing every 10s • Beaconhills Golf Club
     </div>
   </div>
 

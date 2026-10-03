@@ -8,7 +8,7 @@
 
 ## 1. Executive Summary & Vision
 
-**Golf-Bot** is an autonomous, containerized WhatsApp assistant for golf buddy groups. The bot operates with the persona of **Uncle Sunil**, a seasoned, sharp-tongued, and humorous Sri Lankan golf caddy from the Royal Colombo Golf Club.
+**Golf-Bot** is an autonomous, containerized WhatsApp assistant for golf buddy groups. The bot operates with the persona of **Anura Kumara**, a seasoned, sharp-tongued, and humorous Sri Lankan golf caddy from the Royal Colombo Golf Club.
 
 ### Core Objectives:
 1. **Automate Tee Time Organization:** Convert club booking app screenshots directly into interactive native WhatsApp group events.
@@ -54,7 +54,7 @@ graph TD
      - `booking_ref` (confirmation number if visible)
   3. Saves the tee time record into SQLite table `tee_times`.
   4. Generates and sends a native WhatsApp `eventMessage` card to the group chat.
-  5. Sends a confirmation text message in Uncle Sunil's voice reminding the group not to show up late with a hangover.
+  5. Sends a confirmation text message in Anura Kumara's voice reminding the group not to show up late with a hangover.
 
 ---
 
@@ -109,13 +109,13 @@ graph TD
      - Tracks putts per hole and fairway accuracy.
   2. **Deduplication:** Checks `is_round_processed(round_id)` in SQLite to ensure no round is roasted more than once.
   3. **Short & Witty Persona Generation:**
-     - Prompts Gemini with Uncle Sunil's persona to generate a **short and witty comment (2 to 3 sentences maximum)**.
+     - Prompts Gemini with Anura Kumara's persona to generate a **short and witty comment (2 to 3 sentences maximum)**.
      - Does NOT regurgitate every number or player detail; focuses strictly on 1 or 2 key highlights (e.g. comedic blowup hole, putting disaster, or rare monster drive).
   4. **Broadcast:** Sends the punchy comment directly to the WhatsApp group.
 
 ---
 
-### FR-5: Sri Lankan Golf Caddy Chatbot ("Uncle Sunil")
+### FR-5: Sri Lankan Golf Caddy Chatbot ("Anura Kumara")
 * **Description:** An interactive conversational agent embodying a 35-year veteran caddy from Sri Lankan golf courses (RCGC, Nuwara Eliya, Victoria) now caddying for the boys in Melbourne.
 * **Requirements:**
   1. **Voice & Tone (Strict Rule - Short & Witty):**

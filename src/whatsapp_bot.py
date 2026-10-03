@@ -170,7 +170,7 @@ class GolfWhatsAppBot:
             logger.warning(f"Could not send native eventMessage (falling back to card): {ev_err}")
             log_activity("EVENT_CREATED", "WARNING", f"Fallback to card: {ev_err}")
 
-        # 2. Send Uncle Sunil's Confirmation and Banter Card
+        # 2. Send Anura Kumara's Confirmation and Banter Card
         confirmation_msg = (
             f"⛳ *NEW TEE TIME BOOKED!* ⛳\n\n"
             f"Ado machan! {sender_name} just locked in the tee time! WhatsApp event is created:\n\n"
@@ -179,7 +179,7 @@ class GolfWhatsAppBot:
             f"⏰ *Tee Off:* {start_time}\n"
             f"👥 *Players:* {players_str}\n"
             f"🔖 *Booking Ref:* {booking_ref}\n\n"
-            f"Uncle Sunil's advice: Don't arrive at the 1st tee with a 2-hour hangover men! "
+            f"Anura Kumara's advice: Don't arrive at the 1st tee with a 2-hour hangover men! "
             f"Hit 10 practice putts and bring 6 balls because that water on hole 3 is hungry! 🏌️‍♂️🌴"
         )
         self.send_text(client, chat_jid, confirmation_msg)
@@ -204,7 +204,7 @@ class GolfWhatsAppBot:
                     f"📅 *Date:* {next_tt['date_str']}\n"
                     f"⏰ *Time:* {next_tt['start_time']}\n"
                     f"👥 *Players:* {next_tt['players'] or 'The Boys'}\n\n"
-                    f"Uncle Sunil says: Practice your chip shots no! Last time short game was pure disaster!"
+                    f"Anura Kumara says: Practice your chip shots no! Last time short game was pure disaster!"
                 )
             self.send_text(client, chat_jid, msg)
             return

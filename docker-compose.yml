@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   golf-bot:
     build:
@@ -16,6 +14,9 @@ services:
       - ./data:/app/data
       # Group configuration and player details
       - ./config:/app/config
+      # Source code mounts for live reload and fast iteration
+      - ./src:/app/src
+      - ./scripts:/app/scripts
     # TTY and interactive flags to view QR code during pairing
     stdin_open: true
     tty: true

@@ -187,8 +187,8 @@ graph TD
 | `BIRDIES_ACCOUNTS` | JSON array or delimited list of friends' credentials | `'[{"name":"Kasun","email":"...","password":"..."}]'` |
 | `PLAYERS_CONFIG_PATH` | Path to JSON file for player accounts | `config/players.json` |
 | `DEFAULT_COURSE_NAME` | Default course name for weather/tee times | `Beaconhills Golf Club` |
-| `DEFAULT_COURSE_LAT` | Course latitude coordinate (Upper Beaconsfield, VIC) | `-38.0845` |
-| `DEFAULT_COURSE_LON` | Course longitude coordinate | `145.4385` |
+| `DEFAULT_COURSE_LAT` | Course latitude coordinate (85-87 Stoney Creek Rd, Beaconsfield Upper VIC 3808) | `-37.9836` |
+| `DEFAULT_COURSE_LON` | Course longitude coordinate | `145.4182` |
 | `TIMEZONE` | Timezone identifier | `Australia/Melbourne` |
 | `WEATHER_RAIN_THRESHOLD_PERCENT` | Rain alert threshold | `40` |
 | `BIRDIES_SYNC_INTERVAL_MINUTES` | Frequency of background 18Birdies polling | `15` |

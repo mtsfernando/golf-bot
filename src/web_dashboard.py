@@ -11,7 +11,9 @@ from src.db import (
     get_bot_summary_metrics,
     get_activity_logs,
     get_all_player_sync_statuses,
-    get_upcoming_tee_times
+    get_upcoming_tee_times,
+    get_whatsapp_groups_with_recent_messages,
+    get_recent_group_messages
 )
 
 logger = logging.getLogger("Dashboard")
@@ -35,7 +37,7 @@ DASHBOARD_HTML = """<!DOCTYPE html>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Golf-Bot Monitor | Jehan Ratnatunga Console</title>
+  <title>Golf-Bot Monitor</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
@@ -78,12 +80,27 @@ DASHBOARD_HTML = """<!DOCTYPE html>
     .btn { background: var(--card-bg); border: 1px solid var(--border); color: var(--text); padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; }
     .btn:hover { background: var(--border); }
     .footer { text-align: center; color: var(--text-muted); font-size: 12px; margin-top: 32px; }
+
+    /* Groups and message bubbles */
+    .groups-container { display: flex; flex-direction: column; gap: 16px; margin-bottom: 24px; }
+    .group-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; padding: 18px; }
+    .group-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .group-title { font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+    .group-meta { display: flex; gap: 8px; align-items: center; font-size: 12px; color: var(--text-muted); }
+    .msg-thread { display: flex; flex-direction: column; gap: 8px; }
+    .msg-bubble { padding: 10px 14px; border-radius: 8px; font-size: 13px; line-height: 1.4; display: flex; flex-direction: column; gap: 4px; }
+    .msg-user { background: rgba(255,255,255,0.04); border-left: 3px solid var(--blue); }
+    .msg-bot { background: rgba(16, 185, 129, 0.08); border-left: 3px solid var(--green); }
+    .msg-sender { font-weight: 600; font-size: 11px; display: flex; justify-content: space-between; color: var(--text-muted); }
+    .msg-sender-bot { color: var(--green); }
+    .msg-sender-user { color: var(--blue); }
+    .msg-text { word-break: break-word; color: #f1f5f9; }
   </style>
 </head>
 <body>
   <div class="container">
     <header>
-      <h1>🏌️‍♂️ Golf-Bot Monitor <span style="font-size: 13px; color: var(--text-muted); font-weight: normal;">(Jehan Ratnatunga Console)</span></h1>
+      <h1>🏌️‍♂️ Golf-Bot Monitor</h1>
       <div style="display: flex; align-items: center; gap: 12px;">
         <span id="conn-badge" class="status-pill status-offline">● WhatsApp Connecting...</span>
         <button class="btn" onclick="fetchData()">🔄 Refresh</button>
@@ -115,6 +132,17 @@ DASHBOARD_HTML = """<!DOCTYPE html>
       <div class="card">
         <div class="card-title">Rounds Tracked</div>
         <div id="m-rounds" class="card-value">0</div>
+      </div>
+    </div>
+
+    <!-- Active WhatsApp Groups & Recent Messages -->
+    <div class="section-title">
+      <span>👥 WhatsApp Groups & Live Message Feed (Last 5 Messages)</span>
+      <span style="font-size: 12px; font-weight: normal; color: var(--text-muted);">Real-time group traffic</span>
+    </div>
+    <div id="groups-container" class="groups-container">
+      <div class="card" style="text-align: center; color: var(--text-muted); padding: 24px;">
+        Loading WhatsApp groups...
       </div>
     </div>
 
@@ -158,9 +186,10 @@ DASHBOARD_HTML = """<!DOCTYPE html>
 
     <!-- Activity & Failure Log -->
     <div class="section-title">
-      <span>📜 Recent Activity & Failure Log</span>
+      <span>📜 Recent Activity & Group Membership Log</span>
       <div style="display: flex; gap: 8px;">
         <button class="btn" onclick="filterLogs('ALL')">All</button>
+        <button class="btn" onclick="filterLogs('GROUPS')">Group Events</button>
         <button class="btn" onclick="filterLogs('FAILURE')">Failures Only</button>
       </div>
     </div>
@@ -168,7 +197,7 @@ DASHBOARD_HTML = """<!DOCTYPE html>
       <thead>
         <tr>
           <th style="width: 170px;">Timestamp</th>
-          <th style="width: 150px;">Event Type</th>
+          <th style="width: 160px;">Event Type</th>
           <th style="width: 100px;">Status</th>
           <th>Details</th>
         </tr>
@@ -179,7 +208,7 @@ DASHBOARD_HTML = """<!DOCTYPE html>
     </table>
 
     <div class="footer">
-      Jehan Ratnatunga Bot Console • Auto-refreshing every 10s • Beaconhills Golf Club
+      Caddy Bot Console • Auto-refreshing every 10s • Beaconhills Golf Club
     </div>
   </div>
 
@@ -242,6 +271,61 @@ DASHBOARD_HTML = """<!DOCTYPE html>
           teeBody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--text-muted);">No upcoming tee times booked.</td></tr>';
         }
 
+        // Render WhatsApp Groups & Last 5 Messages
+        const groupsContainer = document.getElementById('groups-container');
+        if (data.groups && data.groups.length > 0) {
+          groupsContainer.innerHTML = data.groups.map(g => {
+            const isActive = (g.is_active !== 0);
+            const statusBadge = isActive
+              ? '<span class="pill pill-success">🟢 Active Member</span>'
+              : '<span class="pill pill-failure">🔴 Removed / Left</span>';
+
+            const joinedText = g.joined_at ? `<span>📅 Added: <strong>${g.joined_at}</strong></span>` : '';
+            const leftText = (!isActive && g.left_at) ? `<span style="color: var(--red);">👋 Left: <strong>${g.left_at}</strong></span>` : '';
+
+            const messagesHtml = (g.recent_messages && g.recent_messages.length > 0)
+              ? g.recent_messages.map(m => `
+                  <div class="msg-bubble ${m.is_from_bot ? 'msg-bot' : 'msg-user'}">
+                    <div class="msg-sender">
+                      <span class="${m.is_from_bot ? 'msg-sender-bot' : 'msg-sender-user'}">
+                        ${m.is_from_bot ? '🏌️‍♂️ ' + escapeHtml(m.sender_name || 'Caddy (Bot)') : '👤 ' + escapeHtml(m.sender_name || 'Golfer')}
+                      </span>
+                      <span>${m.created_at}</span>
+                    </div>
+                    <div class="msg-text">${escapeHtml(m.message_text)}</div>
+                  </div>
+                `).join('')
+              : '<div style="color: var(--text-muted); font-size: 12px; padding: 6px 0;">No messages logged in this group yet. Send a message to see it appear here!</div>';
+
+            return `
+              <div class="group-card" style="${isActive ? '' : 'opacity: 0.8; border-color: rgba(239, 68, 68, 0.4);'}">
+                <div class="group-header">
+                  <div class="group-title">
+                    <span>👥 ${escapeHtml(g.group_name || 'Golf Group')}</span>
+                    ${statusBadge}
+                    <span class="pill pill-info">${g.participant_count > 0 ? g.participant_count + ' members' : 'Group'}</span>
+                  </div>
+                  <div class="group-meta" style="flex-wrap: wrap; justify-content: flex-end; gap: 12px;">
+                    ${joinedText}
+                    ${leftText}
+                    <span>⏱️ Last active: ${g.last_message_at || g.updated_at}</span>
+                  </div>
+                </div>
+                <div class="msg-thread">
+                  ${messagesHtml}
+                </div>
+              </div>
+            `;
+          }).join('');
+        } else {
+          groupsContainer.innerHTML = `
+            <div class="card" style="text-align: center; color: var(--text-muted); padding: 24px; line-height: 1.6;">
+              No WhatsApp groups recorded yet.<br>
+              Add the bot (<strong>${data.bot_status.phone || '+61 483 707 094'}</strong>) into your WhatsApp group and send any message (e.g. <code>@caddy hi</code>) to activate!
+            </div>
+          `;
+        }
+
         // Store and Render Logs
         currentLogs = data.recent_logs || [];
         renderLogs();
@@ -256,6 +340,8 @@ DASHBOARD_HTML = """<!DOCTYPE html>
       let filtered = currentLogs;
       if (activeFilter === 'FAILURE') {
         filtered = currentLogs.filter(l => l.status === 'FAILURE');
+      } else if (activeFilter === 'GROUPS') {
+        filtered = currentLogs.filter(l => l.event_type === 'GROUP_JOINED' || l.event_type === 'GROUP_LEFT');
       }
 
       if (filtered.length > 0) {
@@ -265,10 +351,17 @@ DASHBOARD_HTML = """<!DOCTYPE html>
           if (l.status === 'FAILURE') pillClass = 'pill-failure';
           if (l.status === 'WARNING') pillClass = 'pill-warning';
 
+          let typePill = `<span class="pill pill-info">${escapeHtml(l.event_type)}</span>`;
+          if (l.event_type === 'GROUP_JOINED') {
+            typePill = '<span class="pill pill-success">🎉 GROUP_JOINED</span>';
+          } else if (l.event_type === 'GROUP_LEFT') {
+            typePill = '<span class="pill pill-failure">👋 GROUP_LEFT</span>';
+          }
+
           return `
             <tr>
               <td style="color: var(--text-muted); font-size: 12px;">${l.created_at}</td>
-              <td><span class="pill pill-info">${escapeHtml(l.event_type)}</span></td>
+              <td>${typePill}</td>
               <td><span class="pill ${pillClass}">${l.status}</span></td>
               <td>${escapeHtml(l.details || '')}</td>
             </tr>
@@ -318,7 +411,9 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
                 "metrics": get_bot_summary_metrics(),
                 "sync_status": get_all_player_sync_statuses(),
                 "upcoming_tee_times": get_upcoming_tee_times(5),
-                "recent_logs": get_activity_logs(50)
+                "recent_logs": get_activity_logs(50),
+                "groups": get_whatsapp_groups_with_recent_messages(5),
+                "latest_messages": get_recent_group_messages(10)
             }
             self.wfile.write(json.dumps(payload, default=str).encode("utf-8"))
             return

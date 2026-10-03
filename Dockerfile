@@ -13,6 +13,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     ca-certificates \
     tzdata \
     git \
+    libmagic1 \
+    ffmpeg \
     libnss3 \
     libnspr4 \
     libatk1.0-0 \

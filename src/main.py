@@ -42,6 +42,12 @@ def run_birdies_sync_job(bot: GolfWhatsAppBot, birdies_svc: BirdiesSyncService):
     except Exception as e:
         logger.error(f"[Scheduler] Error in 18Birdies sync job: {e}")
 
+def run_groups_sync_job(bot: GolfWhatsAppBot):
+    try:
+        bot.sync_joined_groups()
+    except Exception as e:
+        logger.error(f"[Scheduler] Error in groups sync job: {e}")
+
 def main():
     logger.info("⛳ =============================================")
     logger.info("⛳ GOLF-BOT: Sri Lankan Caddy WhatsApp Assistant")
@@ -71,7 +77,7 @@ def main():
         id="weather_check_job"
     )
 
-    # 18Birdies sync job (every 60 mins)
+    # 18Birdies sync job (every 15 mins)
     scheduler.add_job(
         func=run_birdies_sync_job,
         args=[bot, birdies_svc],
@@ -80,8 +86,17 @@ def main():
         id="birdies_sync_job"
     )
 
+    # WhatsApp groups membership reconciliation job (every 5 mins)
+    scheduler.add_job(
+        func=run_groups_sync_job,
+        args=[bot],
+        trigger="interval",
+        minutes=5,
+        id="groups_sync_job"
+    )
+
     scheduler.start()
-    logger.info(f"✅ Background scheduler started (Weather check: {Config.WEATHER_CHECK_INTERVAL_MINUTES}m, 18Birdies sync: {Config.BIRDIES_SYNC_INTERVAL_MINUTES}m).")
+    logger.info(f"✅ Background scheduler started (Weather: {Config.WEATHER_CHECK_INTERVAL_MINUTES}m, 18Birdies: {Config.BIRDIES_SYNC_INTERVAL_MINUTES}m, Groups: 5m).")
 
     # Graceful shutdown handler
     def handle_exit(sig, frame):

@@ -16,7 +16,48 @@ class GeminiService:
     def __init__(self):
         self.api_key = Config.GEMINI_API_KEY
         self.model_name = Config.GEMINI_MODEL
+        # Ordered fallback chain: primary model first, then models with separate free-tier quotas
+        self.model_chain = [self.model_name] + [
+            m for m in Config.GEMINI_FALLBACK_MODELS if m != self.model_name
+        ]
         self._init_client()
+
+    def _generate(self, contents, system_instruction: Optional[str] = None) -> str:
+        """
+        Calls Gemini, automatically falling back to the next model in the chain
+        on quota exhaustion (429), overload (503) or unavailable model (404).
+        """
+        if self.sdk_type != "google-genai":
+            return self.client.generate_content(contents).text.strip()
+
+        config = {"system_instruction": system_instruction} if system_instruction else None
+        last_err: Optional[Exception] = None
+        for model in self.model_chain:
+            try:
+                response = self.client.models.generate_content(
+                    model=model,
+                    contents=contents,
+                    config=config
+                )
+                if model != self.model_name:
+                    print(f"[Gemini] Served by fallback model: {model}")
+                return self._trim((response.text or "").strip())
+            except Exception as e:
+                err = str(e)
+                if any(code in err for code in ("429", "RESOURCE_EXHAUSTED", "503", "UNAVAILABLE", "404", "NOT_FOUND")):
+                    print(f"[Gemini] Model {model} unavailable ({err[:60]}...). Trying next model.")
+                    last_err = e
+                    continue
+                raise
+        raise last_err or RuntimeError("All Gemini models failed")
+
+    @staticmethod
+    def _trim(text: str, max_chars: int = 320) -> str:
+        """Safety net: if the model ignores the length rules, keep only the first 2 sentences."""
+        if len(text) <= max_chars or text.lstrip().startswith(("{", "[", "```")):
+            return text  # leave short replies and JSON (OCR) untouched
+        sentences = re.split(r"(?<=[.!?])\s+", text)
+        return " ".join(sentences[:2]).strip()
 
     def _init_client(self):
         if not self.api_key:
@@ -57,15 +98,7 @@ class GeminiService:
         try:
             pil_image = Image.open(io.BytesIO(image_bytes))
             
-            if self.sdk_type == "google-genai":
-                response = self.client.models.generate_content(
-                    model=self.model_name,
-                    contents=[TEE_TIME_OCR_PROMPT, pil_image]
-                )
-                text = response.text
-            else:
-                response = self.client.generate_content([TEE_TIME_OCR_PROMPT, pil_image])
-                text = response.text
+            text = self._generate([TEE_TIME_OCR_PROMPT, pil_image])
 
             # Clean json response
             text = text.strip()
@@ -87,7 +120,7 @@ class GeminiService:
 
     def chat_as_caddy(self, user_message: str, context: Optional[str] = None) -> str:
         """
-        Responds to chat queries as Jehan Ratnatunga, the Sri Lankan comedian golf caddy.
+        Responds to chat queries as Caddy, the Sri Lankan golf caddy.
         """
         if not self.client:
             return "Aiyo machan! My AI brain (GEMINI_API_KEY) is missing from .env! How am I supposed to roast your slices without my script?! 😂"
@@ -97,23 +130,14 @@ class GeminiService:
             prompt = f"Context about upcoming golf / group:\n{context}\n\n{prompt}"
 
         try:
-            if self.sdk_type == "google-genai":
-                response = self.client.models.generate_content(
-                    model=self.model_name,
-                    contents=prompt,
-                    config={"system_instruction": SRI_LANKAN_CADDY_SYSTEM_PROMPT}
-                )
-                return response.text.strip()
-            else:
-                response = self.client.generate_content(prompt)
-                return response.text.strip()
+            return self._generate(prompt, SRI_LANKAN_CADDY_SYSTEM_PROMPT)
         except Exception as e:
             print(f"[Gemini] Chat error: {e}")
-            return "Machan, small network glitch with the server! Take a sip of tea and check your grip while I sort this out! 😂"
+            return "Sorry machan, my brain's offline for a bit. Try again shortly."
 
     def generate_round_summary(self, round_stats: Dict[str, Any]) -> str:
         """
-        Generates a witty Sri Lankan caddy post-round summary and roast.
+        Generates a short, genuine post-round summary in Caddy's voice.
         """
         if not self.client:
             return f"⛳ Round complete for {round_stats.get('player_name')}! Score: {round_stats.get('total_score')}."
@@ -140,16 +164,7 @@ class GeminiService:
         )
 
         try:
-            if self.sdk_type == "google-genai":
-                response = self.client.models.generate_content(
-                    model=self.model_name,
-                    contents=prompt,
-                    config={"system_instruction": SRI_LANKAN_CADDY_SYSTEM_PROMPT}
-                )
-                return response.text.strip()
-            else:
-                response = self.client.generate_content(prompt)
-                return response.text.strip()
+            return self._generate(prompt, SRI_LANKAN_CADDY_SYSTEM_PROMPT)
         except Exception as e:
             print(f"[Gemini] Error generating round summary: {e}")
-            return f"⛳ *Jehan Ratnatunga's Scorecard Roast* ⛳\n\nAdo machan! {round_stats.get('player_name')} posted a {round_stats.get('total_score')} at {round_stats.get('course_name')}. If your Amma saw this putting performance, you'd get hit with a Bata slipper right now men! 😂🤦‍♂️"
+            return f"{round_stats.get('player_name')} shot {round_stats.get('total_score')} ({round_stats.get('score_to_par')}) at {round_stats.get('course_name')}."

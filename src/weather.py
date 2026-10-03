@@ -135,31 +135,27 @@ class WeatherService:
 
         prior_context = ""
         if report["prior_day_heavy_rain"]:
-            prior_context = f"\n⚠️ *Soggy Ground Alert:* {prior_rain}mm fell yesterday men! Fairways will be like a paddy field — expect zero roll and your ball plugging deep in the mud!"
+            prior_context = f"\n⚠️ {prior_rain}mm fell yesterday — expect soft, plugged lies."
 
         # Case 1: Under 1mm -> Weather is Good
         if category == "CLEAR":
             return (
-                f"☀️ *Jehan Ratnatunga's Weather Brief ({window_label})*\n\n"
-                f"Ado machan! Clear skies and mint conditions at *{course}* on {date} at {time}!\n"
-                f"🌡️ {temp}°C | 💧 {precip}mm rain. You have literally zero excuses for slicing into the trees today men! ⛳{prior_context}"
+                f"☀️ *Weather ({window_label})* — {course}, {date} {time}\n"
+                f"🌡️ {temp}°C | 💧 {precip}mm. Perfect conditions machan, no excuses today.{prior_context}"
             )
 
         # Case 2: 1-2mm -> Light Drizzle
         elif category == "DRIZZLE":
             return (
-                f"🌦️ *Jehan Ratnatunga's Weather Brief ({window_label})*\n\n"
-                f"Machan, bit of classic Melbourne drizzle (~{precip}mm) expected at *{course}* on {date} at {time}.\n"
-                f"Pack a towel, wipe your grips, and don't cry men — my Amma walks around the block in worse weather than this! 🏌️‍♂️{prior_context}"
+                f"🌦️ *Weather ({window_label})* — {course}, {date} {time}\n"
+                f"🌡️ {temp}°C | 💧 ~{precip}mm drizzle. Bring a towel and a spare glove.{prior_context}"
             )
 
         # Case 3: Over 2mm -> Rain Warning
         else:
             return (
-                f"🌧️ *Jehan Ratnatunga's Weather WARNING! ({window_label})*\n\n"
-                f"Aiyo machan! Proper wet weather alert for *{course}* on {date} at {time}!\n"
-                f"🌧️ {precip}mm rain coming ({report['max_rain_prob']}% chance) | 💨 {report['max_wind_kmh']} km/h.\n"
-                f"Unless you want to look like drowned crows, bring heavy waterproofs or let's head straight to the 19th hole for rolls and beer! 🍺🥪{prior_context}"
+                f"🌧️ *Rain warning ({window_label})* — {course}, {date} {time}\n"
+                f"💧 {precip}mm ({report['max_rain_prob']}% chance) | 💨 {report['max_wind_kmh']} km/h. Aiyo — waterproofs, or we call it?{prior_context}"
             )
 
     def check_and_generate_pending_alerts(self) -> List[Tuple[int, str, str]]:

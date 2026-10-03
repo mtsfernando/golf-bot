@@ -47,8 +47,8 @@ BIRDIES_PASSWORD=your_password
 
 # Default Golf Course and Coordinates for Weather (Beaconhills Golf Club, Melbourne)
 DEFAULT_COURSE_NAME="Beaconhills Golf Club"
-DEFAULT_COURSE_LAT=-38.0845
-DEFAULT_COURSE_LON=145.4385
+DEFAULT_COURSE_LAT=-37.9836
+DEFAULT_COURSE_LON=145.4182
 TIMEZONE=Australia/Melbourne
 ```
 

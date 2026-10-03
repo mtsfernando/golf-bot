@@ -298,6 +298,29 @@ class GolfWhatsAppBot:
             log_activity("ERROR", "FAILURE", f"Message handling error: {e}")
 
     @staticmethod
+    def _normalize_player_names(players: List[str]) -> List[str]:
+        """
+        Converts club-app style "SURNAME, Firstname" to "Firstname Surname" and tidies casing.
+        Only explicit "Surname, First" entries are flipped; names already in "First Last"
+        order are left alone.
+        """
+        def tidy(s: str) -> str:
+            # Title-case words that are ALL CAPS or all lower (keep mixed case like "McDonald" as-is)
+            return " ".join(w.title() if (w.isupper() or w.islower()) else w for w in s.split())
+
+        result = []
+        for raw in players or []:
+            name = re.sub(r"\s+", " ", str(raw)).strip(" ,")
+            if not name:
+                continue
+            if name.count(",") == 1:
+                surname, first = (p.strip() for p in name.split(","))
+                if surname and first:
+                    name = f"{first} {surname}"
+            result.append(tidy(name))
+        return result
+
+    @staticmethod
     def _format_course_name(booking_data: Dict[str, Any]) -> str:
         """
         Beaconhills bookings -> "Beaconhills - <Layout> Course" (e.g. "Beaconhills - Cardinia Course").
@@ -305,7 +328,7 @@ class GolfWhatsAppBot:
         """
         club = (booking_data.get("club_name") or booking_data.get("course_name") or Config.DEFAULT_COURSE_NAME).strip()
         layout = (booking_data.get("course_layout") or "").strip()
-        raw = f"{club} {booking_data.get('course_name') or ''} {layout}".lower()
+        raw = f"{club} {booking_data.get('course_name') or ''} {layout} {booking_data.get('notes') or ''}".lower()
 
         if "beaconhills" in raw:
             if not layout:
@@ -342,7 +365,7 @@ class GolfWhatsAppBot:
         date_str = booking_data.get("date") or datetime.now().strftime("%Y-%m-%d")
         start_time = booking_data.get("start_time") or "08:00"
         end_time = booking_data.get("end_time")
-        players_list = booking_data.get("players") or [sender_name]
+        players_list = self._normalize_player_names(booking_data.get("players") or []) or [sender_name]
         players_str = ", ".join(players_list)
         booking_ref = booking_data.get("booking_ref") or "App Booking"
 

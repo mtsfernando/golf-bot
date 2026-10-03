@@ -48,7 +48,7 @@ Extract the following booking details into pure JSON:
   "date": "YYYY-MM-DD (e.g. 2026-10-15)",
   "start_time": "HH:MM in 24h format (e.g. 07:30 or 14:15)",
   "end_time": "HH:MM (if displayed, otherwise null)",
-  "players": ["List of player names found in the booking, or empty list"],
+  "players": ["Player names in 'First Last' order, one per entry (e.g. 'Thilina Fernando'), or empty list"],
   "booking_ref": "Booking reference code or confirmation number if visible, otherwise null",
   "notes": "Any other key notes (e.g. 18 holes, Cart included, 1st Tee)"
 }
@@ -57,4 +57,5 @@ Rules:
 1. Return ONLY the JSON object. Do not include markdown codeblocks or extra text.
 2. If the image is NOT a golf booking screenshot, return {"is_tee_time_booking": false}.
 3. If the date doesn't include the year, use the upcoming date for the specified month/day relative to current date.
+4. Club apps often list names as "SURNAME, Firstname" (e.g. "Fernando, Thilina"). Always convert to "Firstname Surname" ("Thilina Fernando") in normal title case.
 """

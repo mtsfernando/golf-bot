@@ -141,26 +141,22 @@ class WeatherService:
         if report["prior_day_heavy_rain"]:
             prior_context = f"\n⚠️ {prior_rain}mm fell yesterday — expect soft, plugged lies."
 
+        stats = (
+            f"🌡️ {temp}°C | 💧 {precip}mm ({report['max_rain_prob']}% chance) | 💨 {report['max_wind_kmh']} km/h"
+        )
+        header = f"{course}, {date} {time}"
+
         # Case 1: Under 1mm -> Weather is Good
         if category == "CLEAR":
-            return (
-                f"☀️ *Weather ({window_label})* — {course}, {date} {time}\n"
-                f"🌡️ {temp}°C | 💧 {precip}mm. Perfect conditions machan, no excuses today.{prior_context}"
-            )
+            return f"☀️ *Weather ({window_label})* — {header}\n{stats}\nLooking good machan, no excuses.{prior_context}"
 
         # Case 2: 1-2mm -> Light Drizzle
         elif category == "DRIZZLE":
-            return (
-                f"🌦️ *Weather ({window_label})* — {course}, {date} {time}\n"
-                f"🌡️ {temp}°C | 💧 ~{precip}mm drizzle. Bring a towel and a spare glove.{prior_context}"
-            )
+            return f"🌦️ *Weather ({window_label})* — {header}\n{stats}\nLight drizzle — bring a towel and a spare glove.{prior_context}"
 
         # Case 3: Over 2mm -> Rain Warning
         else:
-            return (
-                f"🌧️ *Rain warning ({window_label})* — {course}, {date} {time}\n"
-                f"💧 {precip}mm ({report['max_rain_prob']}% chance) | 💨 {report['max_wind_kmh']} km/h. Aiyo — waterproofs, or we call it?{prior_context}"
-            )
+            return f"🌧️ *Rain warning ({window_label})* — {header}\n{stats}\nAiyo — waterproofs, or we call it?{prior_context}"
 
     def check_and_generate_pending_alerts(self) -> List[Tuple[int, str, str]]:
         """

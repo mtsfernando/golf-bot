@@ -16,7 +16,7 @@ class Config:
 
     # WhatsApp
     BOT_TRIGGER_KEYWORD: str = os.getenv("BOT_TRIGGER_KEYWORD", "@caddy").strip()
-    BOT_NAME: str = os.getenv("BOT_NAME", "Anura Kumara")
+    BOT_NAME: str = os.getenv("BOT_NAME", "Jehan Ratnatunga")
     WHATSAPP_TARGET_GROUP: str = os.getenv("WHATSAPP_TARGET_GROUP", "").strip()
 
     # 18Birdies
@@ -40,6 +40,9 @@ class Config:
     # Scheduler intervals
     BIRDIES_SYNC_INTERVAL_MINUTES: int = int(os.getenv("BIRDIES_SYNC_INTERVAL_MINUTES", "15"))
     WEATHER_CHECK_INTERVAL_MINUTES: int = int(os.getenv("WEATHER_CHECK_INTERVAL_MINUTES", "30"))
+
+    # Web dashboard
+    DASHBOARD_PORT: int = int(os.getenv("DASHBOARD_PORT", "8080"))
 
     # Storage paths
     DATA_DIR: Path = ROOT_DIR / "data"

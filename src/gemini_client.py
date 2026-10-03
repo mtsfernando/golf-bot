@@ -87,10 +87,10 @@ class GeminiService:
 
     def chat_as_caddy(self, user_message: str, context: Optional[str] = None) -> str:
         """
-        Responds to chat queries as Anura Kumara, the Sri Lankan golf caddy.
+        Responds to chat queries as Jehan Ratnatunga, the Sri Lankan comedian golf caddy.
         """
         if not self.client:
-            return "Aiyo sahodaraya! My AI brain (GEMINI_API_KEY) is missing from .env! How can we implement system change on this group chat without the keys? 🧭"
+            return "Aiyo machan! My AI brain (GEMINI_API_KEY) is missing from .env! How am I supposed to roast your slices without my script?! 😂"
 
         prompt = f"User asks: {user_message}"
         if context:
@@ -109,7 +109,7 @@ class GeminiService:
                 return response.text.strip()
         except Exception as e:
             print(f"[Gemini] Chat error: {e}")
-            return "Sahodaraya, small connection disruption with the central server. Keep your backswing disciplined while I restore order! 🧭"
+            return "Machan, small network glitch with the server! Take a sip of tea and check your grip while I sort this out! 😂"
 
     def generate_round_summary(self, round_stats: Dict[str, Any]) -> str:
         """
@@ -152,4 +152,4 @@ class GeminiService:
                 return response.text.strip()
         except Exception as e:
             print(f"[Gemini] Error generating round summary: {e}")
-            return f"⛳ *Anura Kumara's Scorecard Audit* ⛳\n\nSahodarawaru! {round_stats.get('player_name')} posted {round_stats.get('total_score')} at {round_stats.get('course_name')}. Look at the files—we need a complete system change on the greens! 🧭📄"
+            return f"⛳ *Jehan Ratnatunga's Scorecard Roast* ⛳\n\nAdo machan! {round_stats.get('player_name')} posted a {round_stats.get('total_score')} at {round_stats.get('course_name')}. If your Amma saw this putting performance, you'd get hit with a Bata slipper right now men! 😂🤦‍♂️"

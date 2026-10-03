@@ -1,3 +1,4 @@
+import os
 import time
 import logging
 import signal
@@ -50,7 +51,7 @@ def main():
     init_db()
 
     # 2. Start Web Monitoring Dashboard
-    dashboard_port = int(os.getenv("DASHBOARD_PORT", "8080"))
+    dashboard_port = Config.DASHBOARD_PORT
     start_dashboard_server(port=dashboard_port)
 
     # 3. Initialize Services

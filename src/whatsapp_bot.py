@@ -170,17 +170,17 @@ class GolfWhatsAppBot:
             logger.warning(f"Could not send native eventMessage (falling back to card): {ev_err}")
             log_activity("EVENT_CREATED", "WARNING", f"Fallback to card: {ev_err}")
 
-        # 2. Send Anura Kumara's Confirmation and Directive Card
+        # 2. Send Jehan Ratnatunga's Confirmation and Banter Card
         confirmation_msg = (
-            f"⛳ *NEW TEE TIME REGISTERED!* ⛳\n\n"
-            f"Sahodarawaru! {sender_name} has officially scheduled our next collective gathering!\n\n"
+            f"⛳ *NEW TEE TIME LOCKED IN!* ⛳\n\n"
+            f"Ado machan! {sender_name} just sorted out our next round! Event is locked in:\n\n"
             f"📍 *Course:* {course}\n"
             f"📅 *Date:* {date_str} ({start_dt.strftime('%A')})\n"
             f"⏰ *Tee Off:* {start_time}\n"
-            f"👥 *Comrades:* {players_str}\n"
-            f"🔖 *Registry Ref:* {booking_ref}\n\n"
-            f"Anura Kumara's directive: Do not arrive late with bourgeois excuses or hangovers! "
-            f"Check the Compass (Malimawa 🧭), warm up on the practice green, and bring 6 balls because that water hazard respects no one! ⚖️🏌️‍♂️"
+            f"👥 *The Boys:* {players_str}\n"
+            f"🔖 *Booking Ref:* {booking_ref}\n\n"
+            f"Jehan's advice: Do not show up late because of Monash Freeway traffic men! "
+            f"Pack two mutton rolls in your golf bag and bring at least 8 balls, because I know what happens on hole 3! 😂🏌️‍♂️"
         )
         self.send_text(client, chat_jid, confirmation_msg)
 
@@ -194,8 +194,8 @@ class GolfWhatsAppBot:
             next_tt = get_next_tee_time()
             if not next_tt:
                 msg = (
-                    "Aiyo sahodaraya, no scheduled sessions found in the party registry! "
-                    "Upload a booking screenshot from your club app, and we will establish the event immediately! 🧭"
+                    "Aiyo machan, no upcoming tee times booked in the system! "
+                    "Drop a screenshot from your club app and I'll create the WhatsApp event right now men! ⛳"
                 )
             else:
                 msg = (
@@ -203,8 +203,8 @@ class GolfWhatsAppBot:
                     f"📍 *Course:* {next_tt['course_name']}\n"
                     f"📅 *Date:* {next_tt['date_str']}\n"
                     f"⏰ *Time:* {next_tt['start_time']}\n"
-                    f"👥 *Comrades:* {next_tt['players'] or 'The Comrades'}\n\n"
-                    f"Anura Kumara says: Comrades, look at the files! We need an urgent system change in your short game before Saturday! 📄🧭"
+                    f"👥 *The Boys:* {next_tt['players'] or 'The Boys'}\n\n"
+                    f"Jehan says: Look men, start practicing your putting on the carpet at home! Even my Amma chips better than this! 😂🏌️‍♂️"
                 )
             self.send_text(client, chat_jid, msg)
             return
@@ -230,7 +230,7 @@ class GolfWhatsAppBot:
             if report:
                 self.send_text(client, chat_jid, self.weather.format_caddy_weather_report(report, "Today's Course Forecast"))
             else:
-                self.send_text(client, chat_jid, "Sky looks clear enough machan, but always keep an umbrella handy!")
+                self.send_text(client, chat_jid, "Sky looks clear enough machan, but it's Melbourne — keep a jacket in the car just in case! ☀️")
             return
 
         # Command: Sync 18Birdies rounds & check status
@@ -240,11 +240,11 @@ class GolfWhatsAppBot:
             return
 
         if "sync" in query or "birdies" in query or "rounds" in query:
-            self.send_text(client, chat_jid, "🔄 Polling 18Birdies for all friends, hold on machan...")
+            self.send_text(client, chat_jid, "🔄 Checking 18Birdies for all the boys, hold on machan...")
             self.birdies.sync_all_players()
             new_rounds = self.birdies.scan_for_new_rounds()
             if not new_rounds:
-                self.send_text(client, chat_jid, "All synced! No new un-roasted rounds found on 18Birdies right now men!")
+                self.send_text(client, chat_jid, "All synced! No new un-roasted rounds found on 18Birdies right now men! 😂")
             else:
                 for r in new_rounds:
                     self.send_text(client, chat_jid, r["summary_message"])

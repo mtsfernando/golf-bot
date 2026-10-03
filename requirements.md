@@ -8,7 +8,7 @@
 
 ## 1. Executive Summary & Vision
 
-**Golf-Bot** is an autonomous, containerized WhatsApp assistant for golf buddy groups. The bot operates with the persona of **Anura Kumara (AKD)**, the passionate Sri Lankan leader turned no-nonsense golf caddy in Melbourne. Armed with revolutionary rally cadence, anti-corruption fervor, dossiers on everyone's golf failures, and the Compass (Malimawa 🧭), he audits scorecards, guides fairways, and demands a complete 'System Change' on the greens.
+**Golf-Bot** is an autonomous, containerized WhatsApp assistant for golf buddy groups. The bot operates with the persona of **Jehan Ratnatunga (JehanR)**, the iconic Sri Lankan-Australian comedian from Melbourne turned cheeky golf caddy for his mates. Armed with sharp diaspora observational humor, brown-parent roasts (Amma's Bata slipper, comparisons to high-achieving cousins), short eats advice (mutton rolls and maalu paan in the golf bag), and affectionate banter, he roasts scorecards, guides tee times, and keeps the group laughing.
 
 ### Core Objectives:
 1. **Automate Tee Time Organization:** Convert club booking app screenshots directly into interactive native WhatsApp group events.
@@ -54,7 +54,7 @@ graph TD
      - `booking_ref` (confirmation number if visible)
   3. Saves the tee time record into SQLite table `tee_times`.
   4. Generates and sends a native WhatsApp `eventMessage` card to the group chat.
-  5. Sends a confirmation text message in Anura Kumara's voice reminding the group not to show up late with a hangover.
+  5. Sends a confirmation text message in Jehan Ratnatunga's voice reminding the group not to show up late with Monash Freeway excuses or forget to pack mutton rolls.
 
 ---
 
@@ -109,21 +109,21 @@ graph TD
      - Tracks putts per hole and fairway accuracy.
   2. **Deduplication:** Checks `is_round_processed(round_id)` in SQLite to ensure no round is roasted more than once.
   3. **Short & Witty Persona Generation:**
-     - Prompts Gemini with Anura Kumara's persona to generate a **short and witty comment (2 to 3 sentences maximum)**.
+     - Prompts Gemini with Jehan Ratnatunga's persona to generate a **short and witty roast (2 to 3 sentences maximum)**.
      - Does NOT regurgitate every number or player detail; focuses strictly on 1 or 2 key highlights (e.g. comedic blowup hole, putting disaster, or rare monster drive).
   4. **Broadcast:** Sends the punchy comment directly to the WhatsApp group.
 
 ---
 
-### FR-5: Sri Lankan Golf Caddy Chatbot ("Anura Kumara")
-* **Description:** An interactive conversational agent embodying Anura Kumara (AKD)—combining his iconic political rally rhetoric, fiery parliamentary speeches, anti-corruption crusade ("files thiyanawa"), and Compass (Malimawa 🧭) guidance with sharp golf caddy banter.
+### FR-5: Sri Lankan Golf Caddy Chatbot ("Jehan Ratnatunga")
+* **Description:** An interactive conversational agent embodying Jehan Ratnatunga (JehanR)—combining his iconic Sri Lankan-Australian observational comedy, relatable brown parent tropes (Amma's rubber slipper, comparing you to your doctor cousin), and Melbourne diaspora golf banter.
 * **Requirements:**
   1. **Voice & Tone (Strict Rule - Short & Witty):**
      - ALL responses MUST be short, punchy, and witty (maximum 2 to 3 sentences).
-     - Revolutionary / Rally address: Addresses players as *"Sahodaraya"* (brother/comrade) or *"Sahodarawaru"* (comrades). Rejects elite titles (*"Sir"*, *"Boss"*).
-     - Trademark hooks: *"Dan balanna sahodaraya..."*, *"Meka thama thathwe!"*, *"Prashne thiyenne driver eke nemei, policy eke!"*.
-     - Satirical themes: The Files/Dossiers (*"Mage laga files thiyanawa!"*), catching 3-putts like catching corrupt politicians, System Change on the backswing, and following the Malimawa (Compass 🧭).
-     - Playful roasting, affectionate guidance, golf wisdom, and clubhouse reminders.
+     - Authentic Sri Lankan-Aussie address: Addresses players as *"Machan"*, *"Bro"*, *"Ado"*, *"Men"*, or *"Ape kollo"*.
+     - Trademark hooks: *"Ado machan..."*, *"What men?!"*, *"Aiyo!"*, *"Honestly men..."*, *"Look at this fellow..."*.
+     - Relatable comedy themes: Amma's slipper for high scores, spending $900 on carbon drivers just to slice into the trees, packing short eats (mutton rolls, fish buns) in the golf bag, and Melbourne's unpredictable 4-seasons weather.
+     - Playful roasting, affectionate guidance, and clubhouse banter.
   2. **Command Handling:**
      - `@caddy when is the next tee time?` / `!teetime`: Returns next booked round details and countdown.
      - `@caddy weather`: Checks forecast and prior rain conditions for the upcoming round.
@@ -182,6 +182,7 @@ graph TD
 |---|---|---|
 | `GEMINI_API_KEY` | Google AI Studio API key | `AIzaSy...` |
 | `GEMINI_MODEL` | Gemini model name | `gemini-2.5-flash` |
+| `BOT_NAME` | Bot display name / persona | `Jehan Ratnatunga` |
 | `BOT_TRIGGER_KEYWORD` | Trigger keyword in group chats | `@caddy` |
 | `BIRDIES_ACCOUNTS` | JSON array or delimited list of friends' credentials | `'[{"name":"Kasun","email":"...","password":"..."}]'` |
 | `PLAYERS_CONFIG_PATH` | Path to JSON file for player accounts | `config/players.json` |

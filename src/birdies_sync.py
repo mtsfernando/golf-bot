@@ -325,7 +325,7 @@ class BirdiesSyncService:
                     if not is_round_processed(round_id):
                         print(f"[18Birdies] Detected new round: {parsed['player_name']} at {parsed['course_name']} ({parsed['round_date']}) - Strokes: {parsed['total_score']}")
                         
-                        # Generate Anura Kumara's witty roast
+                        # Generate Jehan Ratnatunga's witty roast
                         summary_text = self.gemini.generate_round_summary(parsed)
 
                         # Record in database
@@ -380,5 +380,5 @@ class BirdiesSyncService:
                 f"   • Latest Round: {latest_date}\n"
                 f"   • Status: {s['status']}\n\n"
             )
-        msg += "Anura Kumara says: Comrades, if your scorecard is missing from the registry, submit your declaration on 18Birdies immediately! Transparency is non-negotiable! 🧭"
+        msg += "Jehan Ratnatunga says: Bro, if you played a round and didn't log it on 18Birdies, did your 5-putt even happen? Upload the scores men! 😂"
         return msg

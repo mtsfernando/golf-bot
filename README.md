@@ -1,4 +1,4 @@
-# 🏌️‍♂️ WhatsApp Golf Bot ("Anura Kumara")
+# 🏌️‍♂️ WhatsApp Golf Bot ("Jehan Ratnatunga")
 
 A containerized Python-centric WhatsApp bot designed for golf groups to automate **tee time bookings**, **WhatsApp event creation**, **18Birdies scorecard synchronization & witty post-round roasts**, **weather alerts**, and **Sri Lankan caddy banter** powered by **Google Gemini AI**.
 
@@ -9,17 +9,17 @@ A containerized Python-centric WhatsApp bot designed for golf groups to automate
 1. **📸 Tee Time Screenshot to WhatsApp Event**:
    - Send or forward any golf booking screenshot from your club app (e.g. MiClub, GolfNow, ClubV1, BRS Golf).
    - Gemini Multimodal AI extracts course name, date, tee off time, and players.
-   - Automatically publishes a native **WhatsApp Event** in the group with full RSVP details and Anura Kumara's confirmation commentary.
+   - Automatically publishes a native **WhatsApp Event** in the group with full RSVP details and Jehan's comedic confirmation commentary.
 
 2. **📊 18Birdies Automated Sync & Scorecard Roast**:
    - Runs a periodic background process to pull your group's round data from [18birdies.com/download-account-data/](https://18birdies.com/download-account-data/).
    - Also detects JSON exports dropped into `./data/18birdies/`.
-   - When a new round is posted, Anura Kumara analyzes fairways, GIR %, 3-putts, and blowup holes to deliver a witty Sri Lankan caddy round summary & roast to the group.
+   - When a new round is posted, Jehan analyzes fairways, GIR %, 3-putts, and blowup holes to deliver a witty, affectionate roast to the group.
 
-3. **🇱🇰 Anura Kumara Caddy Persona & Banter Chatbot**:
+3. **🇱🇰 Jehan Ratnatunga (JehanR) Caddy Persona & Banter Chatbot**:
    - Responds to `@caddy`, `!caddy`, or direct questions.
-   - Employs iconic AKD political rally rhetoric: *"Sahodaraya"*, *"Dan balanna sahodaraya..."*, *"Meka thama thathwe!"*, *"Mage laga files thiyanawa!"*, and the Compass (*Malimawa* 🧭).
-   - Audits scorecards, catches 3-putts like corruption, demands System Change on slices, and gives fiery caddy advice.
+   - Employs iconic Sri Lankan-Australian comedian humor: *"Machan"*, *"Ado"*, *"What men?!"*, *"Aiyo!"*, brown-parent jokes (Amma's slipper, comparing you to your overachieving cousin), and short eats advice (packing mutton rolls & maalu paan in the golf bag).
+   - Roasts 3-putts, mocks spending $900 on carbon drivers to slice into the trees, and gives hilarious golf advice.
 
 4. **🌧️ Automated Rain & Weather Alerts**:
    - Automatically tracks your upcoming tee time and queries hourly precipitation from Open-Meteo.
@@ -91,7 +91,7 @@ docker compose logs -f golf-bot
 
 ## 💬 Interacting with the Bot in WhatsApp
 
-- **Upload Screenshot**: Send a screenshot of your booking app. Anura Kumara parses the time and course and creates a WhatsApp event.
+- **Upload Screenshot**: Send a screenshot of your booking app. Jehan parses the time and course and creates a WhatsApp event.
 - **Tee Time Query**: `@caddy when is the next tee time?` or `!teetime`
 - **Weather Forecast**: `@caddy what is the weather like for our round?`
 - **Manual Scorecard Sync**: `@caddy sync rounds`
@@ -105,7 +105,7 @@ You can test the features independently using the test utility:
 # Test weather forecast & alert format
 python scripts/test_features.py --weather
 
-# Test Anura Kumara chat response
+# Test Jehan Ratnatunga chat response
 python scripts/test_features.py --caddy-chat "Who told Kasun to use driver on hole 2?"
 
 # Test 18Birdies scorecard parsing & roast generation
